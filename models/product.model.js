@@ -17,10 +17,7 @@ const ProductSchema = Schema(
 
 ProductSchema.method.toJSON = () => {
    const obj = this._doc;
-   delete obj.password;
    delete obj.__v;
-   delete obj.updateAt;
-   delete obj.createAt;
    return obj;
 };
 
