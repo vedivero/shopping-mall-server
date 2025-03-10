@@ -26,4 +26,16 @@ const loginWithEmail = async (email, password) => {
    return { user, token };
 };
 
-module.exports = { loginWithEmail };
+/**
+ * 관리자 권한 검증 서비스 함수
+ * @param {String} userId 사용자 ID
+ * @throws {Error} 사용자가 관리자가 아닌 경우
+ */
+const verifyAdminPermission = async (userId) => {
+   const user = await User.findById(userId);
+   if (!user || user.level !== 'admin') {
+      throw new Error('관리자 권한이 필요합니다.');
+   }
+};
+
+module.exports = { loginWithEmail, verifyAdminPermission };
