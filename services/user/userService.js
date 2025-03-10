@@ -27,4 +27,18 @@ const createUser = async (userData) => {
    await newUser.save();
 };
 
-module.exports = { createUser };
+/**
+ * 사용자 ID로 사용자 정보를 조회하는 서비스 함수
+ * @param {String} userId 사용자 ID
+ * @returns {Object} 사용자 객체
+ * @throws {Error} 사용자 정보가 유효하지 않은 경우
+ */
+const getUserById = async (userId) => {
+   const user = await User.findById(userId);
+   if (!user) {
+      throw new Error('토큰 정보가 유효하지 않습니다.');
+   }
+   return user;
+};
+
+module.exports = { createUser, getUserById };
