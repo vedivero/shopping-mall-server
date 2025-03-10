@@ -16,11 +16,8 @@ userController.createUser = async (req, res) => {
 userController.getUser = async (req, res) => {
    try {
       const { userId } = req;
-      const user = await User.findById(userId);
-      if (user) {
-         return res.status(StatusCodes.OK).json({ status: 'success', user });
-      }
-      throw new Error('토큰 정보가 유효하지 않습니다.');
+      const user = await userService.getUserById(userId);
+      res.status(StatusCodes.OK).json({ status: 'success', user });
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
    }
