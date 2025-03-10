@@ -11,7 +11,6 @@ authController.loginWithEmail = async (req, res) => {
    try {
       const { email, password } = req.body;
 
-      // 서비스 계층에서 실제 로그인 로직 처리
       const { user, token } = await authService.loginWithEmail(email, password);
 
       res.status(StatusCodes.OK).json({ user, token });
