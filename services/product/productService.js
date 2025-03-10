@@ -12,4 +12,16 @@ const createProduct = async (productData) => {
    return product;
 };
 
-module.exports = { createProduct };
+/**
+ * 상품 목록을 조회하는 서비스 함수
+ * @param {Object} queryParams - 페이지와 검색어를 포함한 쿼리 파라미터
+ * @returns {Array} 상품 목록 배열
+ */
+const getProducts = async ({ page, name }) => {
+   const cond = name ? { name: { $regex: name, $options: 'i' } } : {};
+   let query = Product.find(cond);
+   const productList = await query.exec();
+   return productList;
+};
+
+module.exports = { createProduct, getProducts };
