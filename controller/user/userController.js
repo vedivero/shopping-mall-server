@@ -1,6 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
 const userService = require('../../services/user/userService');
-const User = require('../../models/user.model');
 
 const userController = {};
 

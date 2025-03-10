@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 const authService = require('../../services/auth/authService');
 const dotenv = require('dotenv');
+const User = require('../../models/user.model');
 dotenv.config();
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
@@ -36,7 +37,16 @@ authController.authenticate = async (req, res, next) => {
       });
       next();
    } catch (error) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+      res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', message: error.message });
+   }
+};
+
+authController.checkAdminPermission = async (req, res, next) => {
+   try {
+      await authService.verifyAdminPermission(req.userId);
+      next();
+   } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', message: error.message });
    }
 };
 
