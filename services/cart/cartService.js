@@ -1,5 +1,5 @@
 const Cart = require('../../models/cart.model');
-
+const mongoose = require('mongoose');
 /**
  * 장바구니에 상품 추가
  * @route POST /cart/
@@ -28,4 +28,31 @@ const addItemToCart = async (data) => {
    return cart;
 };
 
-module.exports = { addItemToCart };
+/**
+ * 장바구니 조회 서비스
+ * @param {Object} userId - 사용자의 고유 ID
+ * @returns {Object} 장바구니 정보 (cart)
+ */
+const getCartByUserId = async (userId) => {
+   try {
+      const objectId = new mongoose.Types.ObjectId(userId);
+      const cart = await Cart.findOne({ userId: objectId }).populate({
+         path: 'items',
+         populate: {
+            path: 'productId',
+            model: 'Product',
+         },
+      });
+
+      if (!cart) {
+         console.log('장바구니 데이터 없음:', userId);
+         return null;
+      }
+
+      return cart;
+   } catch (error) {
+      throw new Error('장바구니 조회 실패: ' + error.message);
+   }
+};
+
+module.exports = { addItemToCart, getCartByUserId };

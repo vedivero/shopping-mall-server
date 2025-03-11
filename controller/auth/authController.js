@@ -34,6 +34,7 @@ authController.authenticate = async (req, res, next) => {
       jwt.verify(token, JWT_SECRET_KEY, (error, payload) => {
          if (error) throw new Error('토큰값이 유효하지 않습니다.');
          req.userId = payload._id;
+         console.log('req.userId : ', req.userId);
       });
       next();
    } catch (error) {
