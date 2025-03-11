@@ -53,4 +53,25 @@ const updateProduct = async (productId, updatedData) => {
    return product;
 };
 
-module.exports = { createProduct, getProducts, updateProduct };
+/**
+ * 상품 상세 조회 서비스 함수
+ * @param {string} productId - 조회할 상품 ID
+ * @returns {Object} 상품 객체
+ */
+const getProductById = async (productId) => {
+   const product = await Product.findById(productId);
+   if (!product) throw new Error('해당 상품을 찾을 수 없습니다.');
+   return product;
+};
+
+/**
+ * 상품 삭제 서비스 함수 (isDeleted 값 변경)
+ * @param {string} productId - 삭제할 상품 ID
+ * @throws {Error} 상품이 존재하지 않을 경우 오류 발생
+ */
+const deleteProduct = async (productId) => {
+   const product = await Product.findByIdAndUpdate(productId, { isDeleted: true }, { new: true });
+   if (!product) throw new Error('해당 상품을 찾을 수 없습니다.');
+};
+
+module.exports = { createProduct, getProducts, updateProduct, getProductById, deleteProduct };

@@ -48,4 +48,37 @@ productController.updateProduct = async (req, res) => {
    }
 };
 
+/**
+ * 상품 상세 조회 API (ID 기준)
+ * @route GET /product/:id
+ */
+productController.getProductById = async (req, res) => {
+   try {
+      const { id } = req.params;
+      const product = await productService.getProductById(id);
+      res.status(StatusCodes.OK).json({ status: 'success', data: product });
+   } catch (error) {
+      console.error('상품 상세 조회 실패:', error);
+      return res
+         .status(StatusCodes.BAD_REQUEST)
+         .json({ status: 'fail', error: '상품 정보를 불러오는 중 오류가 발생했습니다.' });
+   }
+};
+
+/**
+ * 상품 삭제 API (isDeleted 값 변경)
+ * @route DELETE /product/:id
+ */
+productController.deleteProduct = async (req, res) => {
+   try {
+      const { id } = req.params;
+      await productService.deleteProduct(id);
+      res.status(StatusCodes.OK).json({ status: 'success' });
+   } catch (error) {
+      console.error('[ERROR] 상품 삭제 실패:', error);
+      return res
+         .status(StatusCodes.BAD_REQUEST)
+         .json({ status: 'fail', error: '상품 삭제 중 오류가 발생했습니다.' });
+   }
+};
 module.exports = productController;
