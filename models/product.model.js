@@ -15,7 +15,7 @@ const ProductSchema = Schema(
    { timestamp: true },
 );
 
-ProductSchema.method.toJSON = () => {
+ProductSchema.method.toJSON = function () {
    const obj = this._doc;
    delete obj.__v;
    return obj;
