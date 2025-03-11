@@ -10,6 +10,7 @@ const productController = {};
 productController.createProduct = async (req, res) => {
    try {
       const product = await productService.createProduct(req.body);
+      console.log(object);
       res.status(StatusCodes.OK).json({ status: 'success', product });
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', error: error.message });
@@ -23,8 +24,25 @@ productController.createProduct = async (req, res) => {
 productController.getProducts = async (req, res) => {
    try {
       const { page, name } = req.query;
-      const productList = await productService.getProducts({ page, name });
-      res.status(StatusCodes.OK).json({ status: 'success', productList });
+      let response = { status: 'success' };
+      response = await productService.getProducts({ page, name, response });
+      res.status(StatusCodes.OK).json(response);
+   } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', error: error.message });
+   }
+};
+
+/**
+ * 상품 정보 업데이트 API
+ * @route PUT /product/:id
+ */
+productController.updateProduct = async (req, res) => {
+   try {
+      const productId = req.params.id;
+      const updatedData = req.body;
+
+      const updatedProduct = await productService.updateProduct(productId, updatedData);
+      res.status(StatusCodes.OK).json({ status: 'success', data: updatedProduct });
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', error: error.message });
    }
