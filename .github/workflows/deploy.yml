@@ -19,7 +19,7 @@ jobs:
 
          - name: Push to Glitch
            run: |
-              git config --global user.email "vedivero73@example.com"
+              git config --global user.email "vedivero73@gmail.com"
               git config --global user.name "vedivero"
               git remote add glitch "https://${{ secrets.GLITCH_TOKEN }}@api.glitch.com/git/shopping-mall"
               git push --force glitch main:master
