@@ -32,7 +32,7 @@ authController.authenticate = async (req, res, next) => {
       if (!tokenString) throw new Error('토큰을 찾을 수 없습니다.');
       const token = tokenString.replace('Bearer ', '');
       jwt.verify(token, JWT_SECRET_KEY, (error, payload) => {
-         if (error) throw new Error('토큰 값이 유효하지 않습니다.');
+         if (error) throw new Error('토큰이 유효하지 않습니다.');
          req.userId = payload._id;
          console.log('req.userId : ', req.userId);
       });
