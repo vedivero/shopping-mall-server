@@ -55,4 +55,61 @@ const getCartByUserId = async (userId) => {
    }
 };
 
-module.exports = { addItemToCart, getCartByUserId };
+/**
+ * 장바구니에서 특정 아이템 삭제
+ * @param {String} userId - 사용자 ID
+ * @param {String} itemId - 삭제할 상품 ID
+ * @returns {Object} 업데이트된 장바구니 객체
+ */
+const deleteCartItem = async (userId, itemId) => {
+   const cart = await Cart.findOne({ userId });
+   if (!cart) {
+      throw new Error('장바구니를 찾을 수 없습니다.');
+   }
+   cart.items = cart.items.filter((item) => !item._id.equals(itemId));
+   await cart.save();
+
+   return cart;
+};
+
+/**
+ * 사용자의 장바구니에 있는 총 상품 수량 조회
+ * @param {String} userId - 사용자 ID
+ * @returns {Number} 장바구니 내 총 상품 개수
+ */
+const getCartQuantity = async (userId) => {
+   const cart = await Cart.findOne({ userId });
+   if (!cart) return 0;
+   return cart.items.length;
+};
+
+/**
+ * 장바구니 아이템 수량 변경
+ * @param {String} userId - 사용자 ID
+ * @param {String} itemId - 변경할 상품 ID
+ * @param {Number} qty - 변경할 수량
+ * @returns {Array} 업데이트된 장바구니 아이템 목록
+ */
+const updateCartItemQuantity = async (userId, itemId, qty) => {
+   const cart = await Cart.findOne({ userId }).populate({
+      path: 'items',
+      populate: { path: 'productId', model: 'Product' },
+   });
+
+   if (!cart) {
+      throw new Error('There is no cart for this user');
+   }
+
+   const index = cart.items.findIndex((item) => item._id.equals(itemId));
+   if (index === -1) {
+      throw new Error('Cannot find item in the cart');
+   }
+
+   cart.items[index].qty = qty;
+
+   await cart.save();
+
+   return cart.items;
+};
+
+module.exports = { addItemToCart, getCartByUserId, deleteCartItem, getCartQuantity, updateCartItemQuantity };
