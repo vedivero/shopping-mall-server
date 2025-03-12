@@ -1,0 +1,23 @@
+name: Deploy to Glitch
+
+on:
+   push:
+      branches:
+         - main
+
+jobs:
+   deploy:
+      runs-on: ubuntu-latest
+      steps:
+         - name: Checkout Repository
+           uses: actions/checkout@v3
+
+         - name: Install Git
+           run: sudo apt-get install git -y
+
+         - name: Push to Glitch
+           run: |
+              git config --global user.email "your-email@example.com"
+              git config --global user.name "GitHub Actions"
+              git remote add glitch "https://${{ secrets.GLITCH_TOKEN }}@api.glitch.com/git/shopping-mall"
+              git push --force glitch main:master
