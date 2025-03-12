@@ -48,7 +48,6 @@ const getProducts = async ({ page, name, response }) => {
  */
 const updateProduct = async (productId, updatedData) => {
    const product = await Product.findByIdAndUpdate({ _id: productId }, updatedData, { new: true });
-   console.log(product);
    if (!product) throw new Error('해당 상품이 존재하지 않습니다.');
    return product;
 };
