@@ -4,25 +4,23 @@ const User = require('./user.model');
 const Schema = mongoose.Schema;
 const CartSchema = Schema(
    {
-      userId: { type: mongoose.ObjectId, ref: User },
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
       items: [
          {
-            productId: { type: mongoose.ObjectId, ref: Product },
+            productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
             size: { type: String, required: true },
             qty: { type: Number, default: 1 },
          },
       ],
       isDeleted: { type: Boolean, default: false },
    },
-   { timestamp: true },
+   { timestamps: true },
 );
 
-CartSchema.method.toJSON = () => {
+CartSchema.method.toJSON = function () {
    const obj = this._doc;
-   delete obj.password;
    delete obj.__v;
    delete obj.updateAt;
-   delete obj.createAt;
    return obj;
 };
 
