@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const { StatusCodes } = require('http-status-codes');
 const authService = require('../../services/auth/authService');
 const dotenv = require('dotenv');
-const User = require('../../models/user.model');
 dotenv.config();
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
