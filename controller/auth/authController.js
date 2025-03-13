@@ -23,6 +23,21 @@ authController.loginWithEmail = async (req, res) => {
 };
 
 /**
+ * 구글 로그인 API
+ * @route POST /auth/google
+ */
+authController.loginWithGoogle = async (req, res) => {
+   try {
+      const { token } = req.body;
+      const sessionToken = await authService.googleLogin(token);
+
+      res.status(StatusCodes.OK).json({ status: 'success', sessionToken });
+   } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+   }
+};
+
+/**
  * 토큰 검증 API
  * @route GET /auth/me
  */
@@ -42,6 +57,10 @@ authController.authenticate = async (req, res, next) => {
    }
 };
 
+/**
+ * 사용자 권한 체크 함수
+ *
+ */
 authController.checkAdminPermission = async (req, res, next) => {
    try {
       await authService.verifyAdminPermission(req.userId);

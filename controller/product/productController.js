@@ -10,7 +10,6 @@ const productController = {};
 productController.createProduct = async (req, res) => {
    try {
       const product = await productService.createProduct(req.body);
-      console.log(object);
       res.status(StatusCodes.OK).json({ status: 'success', product });
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({
