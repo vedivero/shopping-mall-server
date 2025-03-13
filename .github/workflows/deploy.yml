@@ -23,6 +23,3 @@ jobs:
               git config --global user.name "vedivero"
               git remote add glitch "https://${{ secrets.GLITCH_TOKEN }}@api.glitch.com/git/shopping-mall"
               git push --force glitch main:master
-         - name: Refresh Glitch Project
-           run: |
-              curl -X POST "https://api.glitch.com/v1/projects/${{ secrets.GLITCH_PROJECT_ID }}/refresh"
