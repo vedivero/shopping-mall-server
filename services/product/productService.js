@@ -73,4 +73,54 @@ const deleteProduct = async (productId) => {
    if (!product) throw new Error('해당 상품을 찾을 수 없습니다.');
 };
 
-module.exports = { createProduct, getProducts, updateProduct, getProductById, deleteProduct };
+/**
+ * 개별 상품 재고 확인 서비스 함수
+ * @param {Object} item - { productId, size, qty }
+ * @returns {Object} { isVerify: boolean, message?: string }
+ */
+const checkStock = async (item) => {
+   const product = await Product.findById(item.productId);
+   if (!product) {
+      return { isVerify: false, message: '상품을 찾을 수 없습니다.' };
+   }
+
+   if (product.stock[item.size] < item.qty) {
+      return { isVerify: false, message: `${product.name}의 ${item.size} 사이즈 재고가 부족합니다.` };
+   }
+
+   // 재고 업데이트
+   const newStock = { ...product.stock };
+   newStock[item.size] -= item.qty;
+   product.stock = newStock;
+   await product.save();
+
+   return { isVerify: true };
+};
+
+/**
+ * 주문 리스트의 모든 상품 재고 확인 서비스 함수
+ * @param {Array} orderList - [{ productId, size, qty }]
+ * @returns {Array} 부족한 재고 목록
+ */
+const checkItemListStock = async (orderList) => {
+   const insufficientStockItems = [];
+
+   await Promise.all(
+      orderList.map(async (item) => {
+         const stockCheck = await checkStock(item);
+         if (!stockCheck.isVerify) {
+            insufficientStockItems.push({ item, message: stockCheck.message });
+         }
+      }),
+   );
+
+   return insufficientStockItems;
+};
+module.exports = {
+   createProduct,
+   getProducts,
+   updateProduct,
+   getProductById,
+   deleteProduct,
+   checkItemListStock,
+};

@@ -13,7 +13,11 @@ productController.createProduct = async (req, res) => {
       console.log(object);
       res.status(StatusCodes.OK).json({ status: 'success', product });
    } catch (error) {
-      res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', error: error.message });
+      res.status(StatusCodes.BAD_REQUEST).json({
+         status: 'fail',
+         error: '상품 생성 중 오류가 발생했습니다.',
+         message: error.message,
+      });
    }
 };
 
@@ -28,7 +32,11 @@ productController.getProducts = async (req, res) => {
       response = await productService.getProducts({ page, name, response });
       res.status(StatusCodes.OK).json(response);
    } catch (error) {
-      res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', error: error.message });
+      res.status(StatusCodes.BAD_REQUEST).json({
+         status: 'fail',
+         error: '상품 목록 호출 중 오류가 발생했습니다.',
+         message: error.message,
+      });
    }
 };
 
@@ -44,7 +52,11 @@ productController.updateProduct = async (req, res) => {
       const updatedProduct = await productService.updateProduct(productId, updatedData);
       res.status(StatusCodes.OK).json({ status: 'success', data: updatedProduct });
    } catch (error) {
-      res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', error: error.message });
+      res.status(StatusCodes.BAD_REQUEST).json({
+         status: 'fail',
+         error: '상품 수정 중 오류가 발생했습니다.',
+         message: error.message,
+      });
    }
 };
 
@@ -59,9 +71,11 @@ productController.getProductById = async (req, res) => {
       res.status(StatusCodes.OK).json({ status: 'success', data: product });
    } catch (error) {
       console.error('상품 상세 조회 실패:', error);
-      return res
-         .status(StatusCodes.BAD_REQUEST)
-         .json({ status: 'fail', error: '상품 정보를 불러오는 중 오류가 발생했습니다.' });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+         status: 'fail',
+         error: '상품 정보를 불러오는 중 오류가 발생했습니다.',
+         message: error.message,
+      });
    }
 };
 
@@ -78,7 +92,26 @@ productController.deleteProduct = async (req, res) => {
       console.error('[ERROR] 상품 삭제 실패:', error);
       return res
          .status(StatusCodes.BAD_REQUEST)
-         .json({ status: 'fail', error: '상품 삭제 중 오류가 발생했습니다.' });
+         .json({ status: 'fail', error: '상품 삭제 중 오류가 발생했습니다.', message: error.message });
    }
 };
+
+/**
+ * 개별 상품 재고 확인 API
+ * @param {Object} item - { productId, size, qty }
+ * @returns {Object} { isVerify: boolean, message?: string }
+ */
+productController.checkStock = async (item) => {
+   return await productService.checkStock(item);
+};
+
+/**
+ * 주문 리스트의 모든 상품 재고 확인 API
+ * @param {Array} orderList - [{ productId, size, qty }]
+ * @returns {Array} 부족한 재고 목록
+ */
+productController.checkItemListStock = async (orderList) => {
+   return await productService.checkItemListStock(orderList);
+};
+
 module.exports = productController;
