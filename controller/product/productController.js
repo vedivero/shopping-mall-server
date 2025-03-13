@@ -85,8 +85,8 @@ productController.getProductById = async (req, res) => {
 productController.deleteProduct = async (req, res) => {
    try {
       const { id } = req.params;
-      await productService.deleteProduct(id);
-      res.status(StatusCodes.OK).json({ status: 'success' });
+      const deletedProduct = await productService.deleteProduct(id);
+      res.status(StatusCodes.OK).json({ status: 'success', data: deletedProduct });
    } catch (error) {
       console.error('[ERROR] 상품 삭제 실패:', error);
       return res

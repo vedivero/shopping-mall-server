@@ -47,9 +47,18 @@ const getProducts = async ({ page, name, response }) => {
  * @throws {Error} 상품이 존재하지 않으면 예외 발생
  */
 const updateProduct = async (productId, updatedData) => {
-   const product = await Product.findByIdAndUpdate({ _id: productId }, updatedData, { new: true });
-   if (!product) throw new Error('해당 상품이 존재하지 않습니다.');
-   return product;
+   const existingProduct = await Product.findById(productId);
+   if (!existingProduct) throw new Error('해당 상품이 존재하지 않습니다.');
+
+   if (updatedData.category) {
+      const mergedCategories = [...existingProduct.category, ...updatedData.category];
+      updatedData.category = [...new Set(mergedCategories)];
+   }
+
+   const updatedProduct = await Product.findByIdAndUpdate({ _id: productId }, updatedData, { new: true });
+
+   if (!updatedProduct) throw new Error('상품 업데이트에 실패했습니다.');
+   return updatedProduct;
 };
 
 /**
@@ -69,8 +78,9 @@ const getProductById = async (productId) => {
  * @throws {Error} 상품이 존재하지 않을 경우 오류 발생
  */
 const deleteProduct = async (productId) => {
-   const product = await Product.findByIdAndUpdate(productId, { isDeleted: true }, { new: true });
+   const product = await Product.findByIdAndUpdate(productId, { isDeleted: false }, { new: true });
    if (!product) throw new Error('해당 상품을 찾을 수 없습니다.');
+   return product;
 };
 
 /**
