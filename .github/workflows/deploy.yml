@@ -23,8 +23,8 @@ jobs:
               git config --global user.name "vedivero"
               git remote add glitch "https://${{ secrets.GLITCH_TOKEN }}@api.glitch.com/git/shopping-mall"
               git push --force glitch main:master
-              curl -X POST "https://api.glitch.com/projects/shopping-mall/restart"
 
-         - name: Force Refresh on Glitch
+         - name: Connect to Glitch and Refresh
            run: |
-              curl -X GET "https://shopping-mall.glitch.me/__refresh"
+              curl -X POST "https://api.glitch.com/projects/shopping-mall/console/run?cmd=git%20pull%20origin%20master"
+              curl -X POST "https://api.glitch.com/projects/shopping-mall/console/run?cmd=refresh"
