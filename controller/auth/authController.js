@@ -28,8 +28,8 @@ authController.loginWithEmail = async (req, res) => {
 authController.loginWithGoogle = async (req, res) => {
    try {
       const { token } = req.body;
-      const sessionToken = await authService.googleLogin(token);
-      res.status(StatusCodes.OK).json({ status: 'success', sessionToken });
+      const { user, sessionToken } = await authService.googleLogin(token);
+      res.status(StatusCodes.OK).json({ status: 'success', user, sessionToken });
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
    }
@@ -47,7 +47,6 @@ authController.authenticate = async (req, res, next) => {
       jwt.verify(token, JWT_SECRET_KEY, (error, payload) => {
          if (error) throw new Error('토큰이 유효하지 않습니다.');
          req.userId = payload._id;
-         console.log('req.userId : ', req.userId);
       });
       next();
    } catch (error) {

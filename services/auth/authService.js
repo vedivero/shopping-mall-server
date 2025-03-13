@@ -50,7 +50,8 @@ const googleLogin = async (token) => {
       user = await User.create({ email, name, password: newPassword });
    }
 
-   return user.generateToken();
+   const sessionToken = user.generateToken();
+   return { user, sessionToken };
 };
 
 /**
