@@ -30,7 +30,6 @@ authController.loginWithGoogle = async (req, res) => {
    try {
       const { token } = req.body;
       const sessionToken = await authService.googleLogin(token);
-
       res.status(StatusCodes.OK).json({ status: 'success', sessionToken });
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
