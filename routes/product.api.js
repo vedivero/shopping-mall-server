@@ -14,9 +14,6 @@ router.post(
 // 랜딩 페이지(사용자) - 전체 상품 조회
 router.get('/', productController.getUserProducts);
 
-// 랜딩 페이지(사용자) - 카테고리별 상품 조회
-router.get('/category', productController.getProductsByCategory);
-
 // 관리자 페이지 - 전체 상품 조회
 router.get(
    '/admin',

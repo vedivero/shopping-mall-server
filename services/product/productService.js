@@ -21,39 +21,18 @@ const createProduct = async (productData) => {
  * @returns {Object} 응답 객체 (상품 목록 및 페이지 정보 포함)
  */
 const getUserProducts = async ({ page = 1, category, name }) => {
-   const PAGE_SIZE = 10;
    const cond = { status: 'active', isDeleted: false };
 
-   if (category) cond.category = { $in: [category] };
-   if (name) cond.name = { $regex: name, $options: 'i' };
-
-   let query = Product.find(cond)
-      .skip((page - 1) * PAGE_SIZE)
-      .limit(PAGE_SIZE);
-
-   const totalItemNum = await Product.countDocuments(cond);
-   const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
-
-   const productList = await query.exec();
-
-   return { status: 'success', productList, totalItemNum, totalPageNum };
-};
-
-/**
- * 특정 카테고리에 해당하는 상품 목록을 조회하는 서비스 함수
- * @param {Object} queryParams - 카테고리 정보를 포함한 쿼리 파라미터
- * @param {string} queryParams.category - 조회할 카테고리명 (예: 'tops', 'jeans')
- * @returns {Object} 응답 객체 (상품 목록 포함)
- */
-const getProductsByCategory = async ({ category }) => {
-   console.log('category : ', category);
-   const cond = { status: 'active', isDeleted: false };
-   if (category) {
+   if (category && category.trim() !== '') {
       cond.category = { $in: [category] };
    }
 
+   if (name && name.trim() !== '') {
+      cond.name = { $regex: name, $options: 'i' };
+   }
+
    const productList = await Product.find(cond).exec();
-   console.log('productList : ', productList);
+
    return { status: 'success', productList };
 };
 
@@ -177,7 +156,6 @@ const checkItemListStock = async (orderList) => {
 module.exports = {
    createProduct,
    getUserProducts,
-   getProductsByCategory,
    getAdminProducts,
    updateProduct,
    getProductById,
