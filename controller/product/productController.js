@@ -21,14 +21,33 @@ productController.createProduct = async (req, res) => {
 };
 
 /**
- * 상품 목록 조회 API
+ * [랜딩 페이지(사용자)]상품 목록 조회 API
  * @route GET /product
  */
-productController.getProducts = async (req, res) => {
+productController.getUserProducts = async (req, res) => {
    try {
       const { page, name } = req.query;
       let response = { status: 'success' };
-      response = await productService.getProducts({ page, name, response });
+      response = await productService.getUserProducts({ page, name, response });
+      res.status(StatusCodes.OK).json(response);
+   } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+         status: 'fail',
+         error: '상품 목록 호출 중 오류가 발생했습니다.',
+         message: error.message,
+      });
+   }
+};
+
+/**
+ * [관리자 페이지]상품 목록 조회 API
+ * @route GET /product
+ */
+productController.getAdminProducts = async (req, res) => {
+   try {
+      const { page, name } = req.query;
+      let response = { status: 'success' };
+      response = await productService.getAdminProducts({ page, name, response });
       res.status(StatusCodes.OK).json(response);
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({
