@@ -31,11 +31,14 @@ productController.createProduct = async (req, res) => {
  */
 productController.getUserProducts = async (req, res) => {
    try {
-      const { page = 1, category = null, name = null } = req.query;
+      let { page = 1, category = null, name = null } = req.query;
 
-      // 서비스 함수 호출
+      category = category && category.trim() !== '' ? category : null;
+      name = name && name.trim() !== '' ? name : null;
+
       const response = await productService.getUserProducts({ page, category, name });
 
+      console.log('response : ', response);
       res.status(StatusCodes.OK).json(response);
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({
