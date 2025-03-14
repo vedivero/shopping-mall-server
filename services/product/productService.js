@@ -23,13 +23,8 @@ const createProduct = async (productData) => {
 const getUserProducts = async ({ page = 1, category, name }) => {
    const cond = { status: 'active', isDeleted: false };
 
-   if (category && category.trim() !== '') {
-      cond.category = { $in: [category] };
-   }
-
-   if (name && name.trim() !== '') {
-      cond.name = { $regex: name, $options: 'i' };
-   }
+   if (category && category.trim() !== '') cond.category = { $in: [category] };
+   if (name && name.trim() !== '') cond.name = { $regex: name, $options: 'i' };
 
    const productList = await Product.find(cond).exec();
 
