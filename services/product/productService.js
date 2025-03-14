@@ -13,35 +13,48 @@ const createProduct = async (productData) => {
 };
 
 /**
- * 랜딩 페이지(사용자) - 상품 목록을 조회하는 서비스 함수
- * @param {Object} queryParams - 페이지와 검색어를 포함한 쿼리 파라미터
+ * 사용자 페이지 상품 목록 조회 서비스 함수
+ * @param {Object} queryParams - 검색 조건 포함
+ * @param {string} [queryParams.category] - 카테고리 필터 (예: 'tops', 'jeans')
+ * @param {string} [queryParams.name] - 키워드 검색 (상품명)
+ * @param {number} [queryParams.page] - 페이지 번호
  * @returns {Object} 응답 객체 (상품 목록 및 페이지 정보 포함)
  */
-const getUserProducts = async ({ page, name, response }) => {
-   const PAGE_SIZE = 5;
-   const cond = {
-      status: 'active',
-      isDeleted: false,
-      ...(name ? { name: { $regex: name, $options: 'i' } } : {}),
-   };
+const getUserProducts = async ({ page = 1, category, name }) => {
+   const PAGE_SIZE = 10;
+   const cond = { status: 'active', isDeleted: false };
 
-   let query = Product.find(cond);
+   if (category) cond.category = { $in: [category] };
+   if (name) cond.name = { $regex: name, $options: 'i' };
 
-   if (page) {
-      query.skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
+   let query = Product.find(cond)
+      .skip((page - 1) * PAGE_SIZE)
+      .limit(PAGE_SIZE);
 
-      // 총 아이템 개수와 총 페이지 수 계산
-      const totalItemNum = await Product.countDocuments(cond);
-      const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
-
-      response.totalItemNum = totalItemNum;
-      response.totalPageNum = totalPageNum;
-   }
+   const totalItemNum = await Product.countDocuments(cond);
+   const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
 
    const productList = await query.exec();
-   response.productList = productList;
 
-   return response;
+   return { status: 'success', productList, totalItemNum, totalPageNum };
+};
+
+/**
+ * 특정 카테고리에 해당하는 상품 목록을 조회하는 서비스 함수
+ * @param {Object} queryParams - 카테고리 정보를 포함한 쿼리 파라미터
+ * @param {string} queryParams.category - 조회할 카테고리명 (예: 'tops', 'jeans')
+ * @returns {Object} 응답 객체 (상품 목록 포함)
+ */
+const getProductsByCategory = async ({ category }) => {
+   console.log('category : ', category);
+   const cond = { status: 'active', isDeleted: false };
+   if (category) {
+      cond.category = { $in: [category] };
+   }
+
+   const productList = await Product.find(cond).exec();
+   console.log('productList : ', productList);
+   return { status: 'success', productList };
 };
 
 /**
@@ -164,6 +177,7 @@ const checkItemListStock = async (orderList) => {
 module.exports = {
    createProduct,
    getUserProducts,
+   getProductsByCategory,
    getAdminProducts,
    updateProduct,
    getProductById,

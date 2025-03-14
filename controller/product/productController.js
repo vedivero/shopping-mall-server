@@ -21,14 +21,43 @@ productController.createProduct = async (req, res) => {
 };
 
 /**
- * [랜딩 페이지(사용자)]상품 목록 조회 API
+ * [사용자 페이지] 상품 목록 조회 API
+ * 카테고리 및 키워드 검색을 함께 적용
  * @route GET /product
+ * @query {string} [category] - 카테고리 필터 (예: 'tops', 'jeans')
+ * @query {string} [name] - 키워드 검색
+ * @query {number} [page] - 페이지 번호
+ * @returns {Object} JSON 응답 (상품 목록 포함)
  */
 productController.getUserProducts = async (req, res) => {
    try {
-      const { page, name } = req.query;
-      let response = { status: 'success' };
-      response = await productService.getUserProducts({ page, name, response });
+      const { page = 1, category = null, name = null } = req.query;
+
+      // 서비스 함수 호출
+      const response = await productService.getUserProducts({ page, category, name });
+
+      res.status(StatusCodes.OK).json(response);
+   } catch (error) {
+      res.status(StatusCodes.BAD_REQUEST).json({
+         status: 'fail',
+         error: '상품 목록 호출 중 오류가 발생했습니다.',
+         message: error.message,
+      });
+   }
+};
+
+/**
+ * 특정 카테고리의 상품 목록을 조회하는 API (GET /product/category)
+ * @route GET /product/category
+ * @query {string} category - 조회할 카테고리명 (예: 'tops', 'jeans')
+ * @returns {Object} JSON 응답 (상품 목록 포함)
+ */
+productController.getProductsByCategory = async (req, res) => {
+   try {
+      const { category } = req.query;
+      console.log(category);
+      const response = await productService.getProductsByCategory({ category });
+      // console.log(response);
       res.status(StatusCodes.OK).json(response);
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({
