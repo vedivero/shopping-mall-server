@@ -13,13 +13,48 @@ const createProduct = async (productData) => {
 };
 
 /**
- * 상품 목록을 조회하는 서비스 함수
+ * 랜딩 페이지(사용자) - 상품 목록을 조회하는 서비스 함수
  * @param {Object} queryParams - 페이지와 검색어를 포함한 쿼리 파라미터
  * @returns {Object} 응답 객체 (상품 목록 및 페이지 정보 포함)
  */
-const getProducts = async ({ page, name, response }) => {
+const getUserProducts = async ({ page, name, response }) => {
    const PAGE_SIZE = 5;
-   const cond = name ? { name: { $regex: name, $options: 'i' } } : {};
+   const cond = {
+      status: 'active',
+      isDeleted: false,
+      ...(name ? { name: { $regex: name, $options: 'i' } } : {}),
+   };
+
+   let query = Product.find(cond);
+
+   if (page) {
+      query.skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
+
+      // 총 아이템 개수와 총 페이지 수 계산
+      const totalItemNum = await Product.countDocuments(cond);
+      const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
+
+      response.totalItemNum = totalItemNum;
+      response.totalPageNum = totalPageNum;
+   }
+
+   const productList = await query.exec();
+   response.productList = productList;
+
+   return response;
+};
+
+/**
+ * 관리자 페이지 - 상품 목록을 조회하는 서비스 함수
+ * @param {Object} queryParams - 페이지와 검색어를 포함한 쿼리 파라미터
+ * @returns {Object} 응답 객체 (상품 목록 및 페이지 정보 포함)
+ */
+const getAdminProducts = async ({ page, name, response }) => {
+   const PAGE_SIZE = 5;
+   const cond = {
+      isDeleted: false,
+      ...(name ? { name: { $regex: name, $options: 'i' } } : {}),
+   };
    let query = Product.find(cond);
 
    if (page) {
@@ -128,7 +163,8 @@ const checkItemListStock = async (orderList) => {
 };
 module.exports = {
    createProduct,
-   getProducts,
+   getUserProducts,
+   getAdminProducts,
    updateProduct,
    getProductById,
    deleteProduct,

@@ -11,8 +11,16 @@ router.post(
    productController.createProduct,
 );
 
-// 전체 상품 조회
-router.get('/', productController.getProducts);
+// 랜딩 페이지(사용자) - 전체 상품 조회
+router.get('/', productController.getUserProducts);
+
+// 관리자 페이지 - 전체 상품 조회
+router.get(
+   '/admin',
+   authController.authenticate,
+   authController.checkAdminPermission,
+   productController.getAdminProducts,
+);
 
 // 상품 정보 수정
 router.put(
