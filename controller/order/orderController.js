@@ -23,4 +23,15 @@ orderController.createOrder = async (req, res) => {
    }
 };
 
+orderController.getOrder = async (req, res) => {
+   try {
+      const { userId } = req;
+      const order = await orderService.getOrder(userId);
+      res.status(StatusCodes.OK).json({ status: success, order });
+   } catch (error) {
+      return res
+         .status(StatusCodes.BAD_REQUEST)
+         .json({ status: 'fail', error: '주문 목록 조회 중 오류가 발생했습니다.', message: error.message });
+   }
+};
 module.exports = orderController;

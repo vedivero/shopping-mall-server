@@ -7,6 +7,10 @@ const Product = require('../../models/product.model');
  */
 const createProduct = async (productData) => {
    const { sku, name, size, image, category, description, price, stock, status } = productData;
+
+   const existingProduct = await Product.findOne({ sku });
+   if (existingProduct) throw new Error(`이미 등록된 상품입니다. 상품명 : ${name}`);
+
    const product = new Product({ sku, name, size, image, category, description, price, stock, status });
    await product.save();
    return product;

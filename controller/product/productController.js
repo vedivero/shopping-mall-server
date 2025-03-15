@@ -14,7 +14,6 @@ productController.createProduct = async (req, res) => {
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({
          status: 'fail',
-         error: '상품 생성 중 오류가 발생했습니다.',
          message: error.message,
       });
    }
