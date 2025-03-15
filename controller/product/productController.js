@@ -37,7 +37,6 @@ productController.getUserProducts = async (req, res) => {
 
       const response = await productService.getUserProducts({ page, category, name });
 
-      console.log('response : ', response);
       res.status(StatusCodes.OK).json(response);
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({
@@ -57,9 +56,7 @@ productController.getUserProducts = async (req, res) => {
 productController.getProductsByCategory = async (req, res) => {
    try {
       const { category } = req.query;
-      console.log(category);
       const response = await productService.getProductsByCategory({ category });
-      // console.log(response);
       res.status(StatusCodes.OK).json(response);
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({
