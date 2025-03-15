@@ -9,7 +9,6 @@ const { randomStringGenerator } = require('../../utils/randomStringGenerator');
  * @throws {Error} 재고가 부족한 경우 예외 발생
  */
 const createOrder = async (data, userId) => {
-   console.log(userId);
    const insufficientStockItems = await productController.checkItemListStock(data.orderList);
 
    if (insufficientStockItems.length > 0) {
@@ -31,4 +30,11 @@ const createOrder = async (data, userId) => {
    return newOrder;
 };
 
-module.exports = { createOrder };
+const getOrder = async (userId) => {
+   const orderListByUser = await Order.find({ userId }).sort({ createdAt: -1 });
+   if (!orderListByUser || orderListByUser.length === 0) {
+      throw new Error('해당 회원의 주문 내역이 존재하지 않습니다.');
+   }
+   return orderListByUser;
+};
+module.exports = { createOrder, getOrder };
