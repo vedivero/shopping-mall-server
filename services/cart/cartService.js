@@ -24,7 +24,6 @@ const addItemToCart = async (data) => {
    }
 
    await cart.save();
-   console.log(cart);
    return cart;
 };
 
@@ -45,7 +44,6 @@ const getCartByUserId = async (userId) => {
       });
 
       if (!cart) {
-         console.log('장바구니 데이터 없음:', userId);
          return null;
       }
 

@@ -124,7 +124,6 @@ const checkStock = async (item) => {
       return { isVerify: false, message: `${product.name}의 ${item.size} 사이즈 재고가 부족합니다.` };
    }
 
-   // 재고 업데이트
    const newStock = { ...product.stock };
    newStock[item.size] -= item.qty;
    product.stock = newStock;
