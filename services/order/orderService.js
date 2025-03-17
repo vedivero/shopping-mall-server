@@ -61,19 +61,46 @@ const getOrder = async (userId) => {
  * @returns {Array} 최신순으로 정렬된 전체 주문 목록
  * @throws {Error} 주문 내역이 없을 경우 예외 발생
  */
-const getOrderList = async () => {
-   const orderList = await Order.find()
-      .populate({
-         path: 'items.productId',
-         select: 'name image',
-      })
-      .sort({ createdAt: -1 });
-
-   if (!orderList || orderList.length === 0) {
-      throw new Error('주문 내역이 존재하지 않습니다.');
+const getOrderByOrderNum = async ({ orderNum, page }) => {
+   if (orderNum && orderNum.length !== 10) {
+      const error = new Error('주문번호로 검색해 주세요.');
+      error.status = 'fail';
+      throw error;
    }
 
-   return orderList;
+   const PAGE_SIZE = 5;
+   const skip = (page - 1) * PAGE_SIZE;
+
+   let query = {};
+   if (orderNum) {
+      query.orderNum = orderNum;
+   }
+
+   const orders = await Order.find(query)
+      .populate({
+         path: 'userId',
+         select: 'name email',
+      })
+      .populate({
+         path: 'items.productId',
+         select: 'name image price',
+      })
+      .skip(skip)
+      .limit(PAGE_SIZE)
+      .sort({ createdAt: -1 });
+
+   const totalOrders = await Order.countDocuments(query);
+   const totalPages = Math.ceil(totalOrders / PAGE_SIZE);
+
+   return {
+      orders,
+      pagination: {
+         currentPage: page,
+         totalPages,
+         totalOrders,
+         pageSize: PAGE_SIZE,
+      },
+   };
 };
 
 /**
@@ -95,4 +122,4 @@ const updateOrderStatus = async (id, status) => {
    return order;
 };
 
-module.exports = { createOrder, getOrder, getOrderList, updateOrderStatus };
+module.exports = { createOrder, getOrder, getOrderByOrderNum, updateOrderStatus };

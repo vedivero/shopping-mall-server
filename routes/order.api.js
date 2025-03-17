@@ -9,7 +9,7 @@ router.get(
    '/all',
    authController.authenticate,
    authController.checkAdminPermission,
-   orderController.getOrderList,
+   orderController.getOrderByOrderNum,
 );
 router.put(
    '/:id',
