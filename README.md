@@ -1,21 +1,30 @@
-# 쇼핑몰 프로젝트 
+<h1 align="center">MENS CLOSET SHOPPING MALL</h1>
 
-* 웹 페이지 링크 🖥
-  - https://mens-closet.netlify.app/
-* 관리자 계정 정보
+</br>
 
-  |account|password|
-  |-------|--------|
-  |admin@eamil.com|123|
+![image](https://github.com/user-attachments/assets/50a063d5-148e-4ab9-a0b4-a5682cd59831)
+
+</br>
+
+## 💫 MENS CLOSET SHOPPING MALL 배포 링크 및 테스트 계정
+
+👉🏻 [MENS CLOSET SHOPPING MALL](https://www.feelmyrhythm.com](https://mens-closet.netlify.app/) '바로가기')
+
+```수정하기
+ID: admin@eamil.com
+PW: 123
+```
 
 <br>
 
-## 프로젝트 목표 🎯
+## 1. 서비스 소개
 
-사용자가 상품을 검색하고, 장바구니를 이용해 편리하게 주문할 수 있는 **쇼핑몰 웹사이트** 구축
+🎧 <em>남성 의류 전문 쇼핑몰 <strong>MENS CLOSET</strong>입니다.</em>
+- 사용자가 상품을 검색하고, 장바구니를 이용해 상품을 주문/결제할 수 있는 **쇼핑몰 웹사이트** 구축했습니다.
+  
 
-### 주요 기능:
-- **사용자 회원가입 및 로그인** (이메일, 비밀번호, 구글 계정 로그인 지원)
+## 2. 주요 기능:
+- **사용자 회원가입 및 로그인** (이메일, 비밀번호, 구글 로그인)
 - **상품 목록 및 상세 페이지 제공**
 - **장바구니 기능** (상품 추가, 수량 변경, 삭제)
 - **주문 기능** (배송지 및 결제 정보 입력)
@@ -23,51 +32,55 @@
 
 <br>
 
-## User Story 📖
+## 3. 개발 환경
 
-### 유저
-* 사용자는 랜딩페이지에서 상품을 볼 수 있다.
-* 사용자는 상품 디테일 페이지를 볼 수 있다.
-* 사용자는 상품을 이름으로 검색할 수 있다.
-  
-* 사용자는 회원가입을 할 수 있다.
-* 사용자는 이메일과 비밀번호로 로그인을 할 수 있다.
-* 사용자는 구글로 로그인을 할 수 있다.
+### 🛠 기술 스택
 
-### 상품
-* 관리자는 상품을 등록할 수 있다.
-* 관리자는 상품을 수정, 삭제할 수 있다. 
-* 관리자는 관리자 페이지에서 상품리스트를 볼 수 있다.
+<div>
+    <img src="https://img.shields.io/badge/Node.js-grey?style=for-the-badge&logo=Node.js&logoColor=339933"/>
+    <img src="https://img.shields.io/badge/Express.js-grey?style=for-the-badge&logo=Express&logoColor=000000"/>
+    <img src="https://img.shields.io/badge/MongoDB-grey?style=for-the-badge&logo=MongoDB&logoColor=47A248"/>
+    <img src="https://img.shields.io/badge/Mongoose-grey?style=for-the-badge&logo=Node.js&logoColor=green"/>
+    <img src="https://img.shields.io/badge/REST API-grey?style=for-the-badge&logo=Postman&logoColor=FF6C37"/>
+    <img src="https://img.shields.io/badge/JWT-grey?style=for-the-badge&logo=JSON Web Tokens&logoColor=black"/>
+    <img src="https://img.shields.io/badge/Multer-grey?style=for-the-badge&logo=Upload&logoColor=blue"/>
+    <img src="https://img.shields.io/badge/Bcrypt-grey?style=for-the-badge&logo=Security&logoColor=orange"/>
+    <img src="https://img.shields.io/badge/GitHub Actions-grey?style=for-the-badge&logo=GitHub Actions&logoColor=2088FF"/>
+</div>
 
-
-### 카트
-* 사용자는 사이즈를 선택 후 카트에 아이템을 담을 수 있다.
-* 사용자는 카트페이지에서 담은 아이템 리스트를 볼 수 있다.
-* 사용자는 카트에 각 아이템의 구매 개수를 수정할 수 있다.
-* 사용자는 카트 아이템을 삭제할 수 있다.
-* 사용자는 카트에 담긴 상품들의 총 가격을 볼 수 있다.
-
-### 주문
-#### 사용자
-* 사용자는 상품주문시 연락처, 주소, 카드정보를 입력한다.
-* 사용자는 주문하려는 상품들의 총 가격을 볼 수 있다.
-* 사용자는 주문 완료후 주문 완료 페이지를 볼 수 있다.
-* 사용자는 주문페이지에서 주문 내역을 볼 수 있다.
-
-#### 관리자
-* 관리자는 관리자 페이지에서 모든 유저의 주문 내역을 볼 수 있다.
-* 관리자는 주문 디테일을 볼 수 있다.
-* 관리자는 주문의 상태를 (준비중, 배송중, 완료, 환불) 수정할 수 있다.
-* 관리자는 주문번호로 주문을 검색할 수 있다.
 
 <br>
 
-## 사용된 기술🏛
+## 4. 📖 User Story
 
-### BE
-* Nodejs
-* Express
-* MongoDB
-### Devops
-* Glitch
+### 👤 사용자 (User)
+- **상품 조회**: 랜딩 페이지에서 상품 목록 및 상세 정보를 확인할 수 있다.
+- **검색 및 회원 관리**: 상품을 검색하고, 회원가입 및 로그인(이메일/구글)할 수 있다.
+
+---
+
+### 🛍️ 상품 관리 (Admin)
+- **상품 등록/관리**: 상품을 추가, 수정, 삭제할 수 있다.
+- **상품 리스트**: 관리자 페이지에서 전체 상품 목록을 확인할 수 있다.
+
+---
+
+### 🛒 장바구니 (Cart)
+- **상품 추가/관리**: 상품을 장바구니에 추가하고, 개수를 조정하거나 삭제할 수 있다.
+- **총 가격 확인**: 장바구니에 담긴 상품들의 총 가격을 볼 수 있다.
+
+---
+
+### 📦 주문 및 결제 (Order & Payment)
+
+#### 🔹 사용자
+- **주문 및 결제**: 연락처, 주소, 카드 정보를 입력해 주문할 수 있다.
+- **주문 내역 확인**: 주문 완료 후 주문 내역을 확인할 수 있다.
+
+#### 🔹 관리자
+- **주문 관리**: 모든 사용자의 주문 내역 및 상세 정보를 확인할 수 있다.
+- **주문 상태 수정**: 주문 상태(준비중, 배송중, 완료, 환불)를 변경할 수 있다.
+- **주문 검색**: 주문번호를 입력해 특정 주문을 검색할 수 있다.
+
+
 
