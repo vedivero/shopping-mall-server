@@ -45,18 +45,25 @@ orderController.getOrder = async (req, res) => {
 
 /**
  * 전체 주문 목록 조회 API (관리자용)
- * 모든 사용자의 주문 목록을 조회합니다.
+ * 관리자가 사용자의 주문 목록을 조회합니다.
  * @route GET /order/list
  * @returns {Object} 전체 주문 목록 (배열 형태)
  */
-orderController.getOrderList = async (req, res) => {
+orderController.getOrderByOrderNum = async (req, res) => {
    try {
-      const adminOrderList = await orderService.getOrderList();
-      res.status(StatusCodes.OK).json({ status: 'success', adminOrderList });
+      const { page, orderNum } = req.query;
+      console.log(orderNum);
+      console.log(page);
+      const order = await orderService.getOrderByOrderNum({ orderNum, page: Number(page) });
+
+      return res.status(StatusCodes.OK).json({
+         status: 'success',
+         data: order,
+      });
    } catch (error) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-         status: 'fail',
-         error: '관리자 주문 목록 조회 중 오류가 발생했습니다.',
+         status: error.status || 'fail',
+         error: '주문 조회 중 오류가 발생했습니다.',
          message: error.message,
       });
    }
@@ -79,7 +86,6 @@ orderController.updateOrderStatus = async (req, res) => {
       console.log('🔹 변경할 상태:', status);
 
       const order = await orderService.updateOrderStatus(id, status);
-      console.log(order);
       res.status(StatusCodes.OK).json({
          status: 'success',
          message: '주문 상태가 업데이트되었습니다.',
