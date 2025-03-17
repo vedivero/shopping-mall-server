@@ -52,8 +52,6 @@ orderController.getOrder = async (req, res) => {
 orderController.getOrderByOrderNum = async (req, res) => {
    try {
       const { page, orderNum } = req.query;
-      console.log(orderNum);
-      console.log(page);
       const order = await orderService.getOrderByOrderNum({ orderNum, page: Number(page) });
 
       return res.status(StatusCodes.OK).json({
@@ -81,9 +79,6 @@ orderController.updateOrderStatus = async (req, res) => {
    try {
       const { id } = req.params;
       const { status } = req.body;
-
-      console.log('🔹 업데이트할 주문 ID:', id);
-      console.log('🔹 변경할 상태:', status);
 
       const order = await orderService.updateOrderStatus(id, status);
       res.status(StatusCodes.OK).json({
