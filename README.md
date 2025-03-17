@@ -8,7 +8,7 @@
 
 ## 💫 MENS CLOSET SHOPPING MALL 배포 링크 및 테스트 계정
 
-- [MENS CLOSET](https://mens-closet.netlify.app) 👈🏻 **페이지 바로가기**
+- <a href="https://mens-closet.netlify.app" target="_blank" rel="noopener noreferrer"><strong>MENS CLOSET</strong> </a> 👈🏻👈🏻 **페이지 바로가기**
  
 ```수정하기
 ID: admin@eamil.com
