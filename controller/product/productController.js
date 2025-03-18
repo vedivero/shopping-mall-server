@@ -160,4 +160,23 @@ productController.checkItemListStock = async (orderList) => {
    return await productService.checkItemListStock(orderList);
 };
 
+/**
+ * 관리자 페이지 - 상품 통계 데이터를 반환하는 컨트롤러
+ * @param {Object} req - Express 요청 객체
+ * @param {Object} res - Express 응답 객체
+ * @returns {JSON} 상품 통계 데이터 반환 또는 오류 메시지 반환
+ * @description 서비스 레이어에서 상품 목록을 조회하고, 응답으로 전달
+ */
+productController.getAdminProductListForStats = async (req, res) => {
+   try {
+      const productList = await productService.getAdminProductListForStats();
+      res.status(StatusCodes.OK).json({ status: 'success', data: productList });
+   } catch (error) {
+      console.error('[ERROR] 상품 조회회 실패:', error);
+      return res
+         .status(StatusCodes.BAD_REQUEST)
+         .json({ status: 'fail', error: '상품 조회 중 오류가 발생했습니다.', message: error.message });
+   }
+};
+
 module.exports = productController;

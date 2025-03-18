@@ -41,4 +41,12 @@ router.delete(
 // 상품 상세정보 조회
 router.get('/:id', productController.getProductById);
 
+// 상품 통계 조회
+router.get(
+   '/admin/stats',
+   authController.authenticate,
+   authController.checkAdminPermission,
+   productController.getAdminProductListForStats,
+);
+
 module.exports = router;
