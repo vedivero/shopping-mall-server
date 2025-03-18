@@ -26,6 +26,7 @@ PW: 123
 🎧 <em>남성 의류 전문 쇼핑몰 <strong>MENS CLOSET</strong>입니다.</em>
 - 사용자가 상품을 검색하고, 장바구니를 이용해 상품을 주문/결제할 수 있는 **쇼핑몰 웹사이트** 구축했습니다.
   
+</br>
 
 ## 2. 주요 기능:
 - **사용자 회원가입 및 로그인** (이메일, 비밀번호, 구글 로그인)
@@ -51,7 +52,6 @@ PW: 123
     <img src="https://img.shields.io/badge/Bcrypt-grey?style=for-the-badge&logo=Security&logoColor=orange"/>
     <img src="https://img.shields.io/badge/GitHub Actions-grey?style=for-the-badge&logo=GitHub Actions&logoColor=2088FF"/>
 </div>
-
 
 <br>
 
