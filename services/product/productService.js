@@ -151,6 +151,17 @@ const checkItemListStock = async (orderList) => {
 
    return insufficientStockItems;
 };
+
+/**
+ * 관리자 페이지 - 상품 통계를 위한 전체 상품 목록 조회 서비스 함수
+ * @returns {Array} 상품 리스트
+ * @description 데이터베이스에서 모든 상품 정보를 가져와 관리자 통계 페이지에서 활용할 수 있도록 반환
+ */
+const getAdminProductListForStats = async () => {
+   const products = await Product.find();
+   return products;
+};
+
 module.exports = {
    createProduct,
    getUserProducts,
@@ -159,4 +170,5 @@ module.exports = {
    getProductById,
    deleteProduct,
    checkItemListStock,
+   getAdminProductListForStats,
 };
