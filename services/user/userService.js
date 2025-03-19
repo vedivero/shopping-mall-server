@@ -45,7 +45,7 @@ const createUser = async (userData) => {
 const sendVerificationEmail = async (email) => {
    const token = jwt.sign({ email }, JWT_SECRET_KEY, { expiresIn: '1h' });
 
-   const verificationLink = `${BACKEND_URL}/auth/verify/email?token=${token}`;
+   const verificationLink = `${BACKEND_URL}/api/auth/verify/email?token=${token}`;
 
    const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
