@@ -14,10 +14,19 @@ const authController = {};
 authController.loginWithEmail = async (req, res) => {
    try {
       const { email, password } = req.body;
-      const { user, token } = await authService.loginWithEmail(email, password);
-      res.status(StatusCodes.OK).json({ user, token });
+      const result = await authService.loginWithEmail(email, password);
+
+      if (result.status === 401) {
+         return res.status(StatusCodes.UNAUTHORIZED).json({ status: result.status, message: result.message });
+      }
+      if (result.status === 400) {
+         return res.status(StatusCodes.BAD_REQUEST).json({ status: result.status, message: result.message });
+      }
+
+      res.status(StatusCodes.OK).json({ status: result.status, user: result.user, token: result.token });
    } catch (error) {
-      res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+      console.error('❌ 서버 오류:', error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: '서버 오류가 발생했습니다.' });
    }
 };
 
@@ -64,6 +73,30 @@ authController.checkAdminPermission = async (req, res, next) => {
       next();
    } catch (error) {
       res.status(StatusCodes.BAD_REQUEST).json({ status: 'fail', message: error.message });
+   }
+};
+
+/**
+ * 이메일 인증 API
+ * @route GET /auth/verify/email
+ */
+authController.verifyEmail = async (req, res) => {
+   try {
+      const token = req.query.token || req.body.token;
+      if (!token) throw new Error('인증 토큰이 없습니다.');
+
+      const result = await authService.verifyEmail(token);
+
+      res.send(`
+         <h2>이메일 인증 완료</h2>
+         <p>${result.message}</p>
+         <a href="http://localhost:3000/login">로그인 페이지로 이동</a>
+      `);
+   } catch (error) {
+      res.status(400).send(`
+         <h2>이메일 인증 실패</h2>
+         <p>${error.message}</p>
+      `);
    }
 };
 
