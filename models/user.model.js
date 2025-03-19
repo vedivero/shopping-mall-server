@@ -10,6 +10,7 @@ const userSchema = Schema(
       password: { type: String, required: true },
       name: { type: String, required: true },
       level: { type: String, default: 'customer' }, //user level=admin,customer
+      verify: { type: Boolean, default: false },
    },
    { timestamp: true },
 );

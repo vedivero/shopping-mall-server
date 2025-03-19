@@ -1,8 +1,10 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../../models/user.model');
 const dotenv = require('dotenv');
 dotenv.config();
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const { OAuth2Client } = require('google-auth-library');
 
 /**
@@ -14,19 +16,21 @@ const { OAuth2Client } = require('google-auth-library');
  */
 
 const loginWithEmail = async (email, password) => {
-   const user = await User.findOne({ email });
-   if (!user) {
-      throw new Error('로그인 정보가 일치하지 않습니다.');
+   try {
+      const user = await User.findOne({ email });
+      if (!user) return { status: 400, message: '로그인 정보가 일치하지 않습니다.' };
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return { status: 400, message: '로그인 정보가 일치하지 않습니다.' };
+
+      if (!user.verify) return { status: 401, message: '이메일 인증이 완료되지 않았습니다. ' };
+      const token = await user.generateToken();
+
+      return { status: 200, user, token };
+   } catch (error) {
+      console.error('이메일 로그인 서비스 오류:', error);
+      throw error;
    }
-
-   const isMatch = await bcrypt.compare(password, user.password);
-   if (!isMatch) {
-      throw new Error('로그인 정보가 일치하지 않습니다.');
-   }
-
-   const token = await user.generateToken();
-
-   return { user, token };
 };
 
 /**
@@ -66,4 +70,28 @@ const verifyAdminPermission = async (userId) => {
    }
 };
 
-module.exports = { loginWithEmail, googleLogin, verifyAdminPermission };
+/**
+ * 이메일 인증 처리 서비스
+ * @param {string} token - 이메일 인증 토큰
+ * @returns {object} - 인증 완료 메시지
+ * @throws {Error} - 인증 실패 시 예외 발생
+ */
+const verifyEmail = async (token) => {
+   if (!token) throw new Error('인증 토큰이 없습니다.');
+
+   // ✅ `jwt.verify` 실행 가능하도록 수정
+   const decoded = jwt.verify(token, JWT_SECRET_KEY);
+   const { email } = decoded;
+
+   const user = await User.findOne({ email });
+   if (!user) throw new Error('유효하지 않은 사용자입니다.');
+
+   if (user.verify) throw new Error('이미 인증된 이메일입니다.');
+
+   user.verify = true;
+   await user.save();
+
+   return { message: '이메일 인증이 완료되었습니다.', verified: true };
+};
+
+module.exports = { loginWithEmail, googleLogin, verifyAdminPermission, verifyEmail };
